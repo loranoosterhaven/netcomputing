@@ -1,4 +1,4 @@
-Efficient resource management system
+# Efficient resource management system
 
 University of Groningen
 
