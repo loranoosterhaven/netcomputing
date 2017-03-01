@@ -5,16 +5,19 @@ class Main
 {
     public static void main(String[] args)
     {
-        if (args.length < 1) {
-            System.out.println("Usage: java server <portnumber>");
-            return;
+        if (args.length < 2) {
+            System.out.println("Usage: java server <ip> <portnumber>");
+            System.exit(1);
         }
 
+        // port and ip of the webserver
         final int portNumber = Integer.parseInt(args[0]);
+        final String ip = args[1];
 
         try
         {
-            Server server = new Server(portNumber);
+            // Start server
+            Server server = new Server(ip, portNumber);
             server.run();
         }
 
