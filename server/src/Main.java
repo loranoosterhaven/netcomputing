@@ -1,4 +1,3 @@
-import java.io.Console;
 import java.io.IOException;
 
 class Main
@@ -17,7 +16,7 @@ class Main
         try
         {
             // Start server
-            Server server = new Server(ip, portNumber);
+            DashboardController server = new DashboardController(ip, portNumber);
             server.run();
         }
 

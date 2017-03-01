@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-class Server
+class DashboardController
 {
     private int portNumber;
 
@@ -13,7 +13,7 @@ class Server
     private String hostName;
     private Socket socket;
 
-    Server(String hostName, int portNumber) throws IOException
+    DashboardController(String hostName, int portNumber) throws IOException
     {
         this.hostName = hostName;
         this.portNumber = portNumber;
