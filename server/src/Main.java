@@ -1,4 +1,3 @@
-import java.io.Console;
 import java.io.IOException;
 
 class Main
@@ -11,19 +10,19 @@ class Main
         }
 
         // port and ip of the webserver
-        final int portNumber = Integer.parseInt(args[0]);
-        final String ip = args[1];
+        final String ip = args[0];
+        final int portNumber = Integer.parseInt(args[1]);
 
         try
         {
             // Start server
-            Server server = new Server(ip, portNumber);
+            DashboardController server = new DashboardController(ip, portNumber);
             server.run();
         }
 
         catch (IOException e)
         {
-            System.err.println("IOException occured" + e.getMessage());
+            System.err.println("IOException occured:\n" + e.getMessage());
             e.printStackTrace();
         }
     }
