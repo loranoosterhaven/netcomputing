@@ -23,7 +23,7 @@ class Main
 
         catch (IOException e)
         {
-            System.err.println("IOException occured" + e.getMessage());
+            System.err.println("IOException occured:\n" + e.getMessage());
             e.printStackTrace();
         }
     }
