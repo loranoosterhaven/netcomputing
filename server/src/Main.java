@@ -11,8 +11,8 @@ class Main
         }
 
         // port and ip of the webserver
-        final int portNumber = Integer.parseInt(args[0]);
-        final String ip = args[1];
+        final String ip = args[0];
+        final int portNumber = Integer.parseInt(args[1]);
 
         try
         {
