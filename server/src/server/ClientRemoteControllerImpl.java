@@ -8,6 +8,8 @@ import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
 
 /**
  * Created by hein on 8-3-17.
@@ -75,6 +77,15 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
         while(true) {
             System.out.println("Checking all nodes");
 
+            for (Iterator<Map.Entry<String, NodeInfo>> it = nodesInfos.entrySet().iterator(); it.hasNext();)
+            {
+                Map.Entry<String, NodeInfo> entry = it.next();
+                long diff = System.currentTimeMillis() - entry.getValue().getLastTick();
+                if (diff > 20000) {
+                    System.out.println("Timeout: removing node " + entry.getValue().getIp());
+                    it.remove();
+                }
+            }
 
             try {
                 Thread.sleep(10000);
