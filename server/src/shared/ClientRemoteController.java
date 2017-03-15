@@ -6,8 +6,8 @@ import java.rmi.server.ServerNotActiveException;
 
 public interface ClientRemoteController extends Remote
 {
-    boolean registerNode() throws RemoteException, ServerNotActiveException;
-    boolean unregisterNode() throws RemoteException, ServerNotActiveException;
+    boolean registerNode() throws Exception;
+    boolean unregisterNode() throws Exception;
 
-    boolean updateNode( DeviceInfo deviceInfo ) throws RemoteException, ServerNotActiveException;
+    boolean updateNode( DeviceInfo deviceInfo ) throws Exception;
 }

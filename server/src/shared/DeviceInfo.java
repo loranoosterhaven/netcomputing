@@ -1,6 +1,7 @@
 package shared;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by hein on 8-3-17.
@@ -10,6 +11,14 @@ public class DeviceInfo implements Serializable
     private String hostname;
     private String domainName;
     private String userName;
+    private ArrayList<ProcessInfo> processInfo;
+    private SystemInfo systemInfo;
+
+    public DeviceInfo()
+    {
+        processInfo = new ArrayList<>();
+        systemInfo = new SystemInfo();
+    }
 
     public String getHostname() {
         return hostname;
@@ -34,4 +43,6 @@ public class DeviceInfo implements Serializable
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public SystemInfo getSystemInfo() { return systemInfo; }
 }

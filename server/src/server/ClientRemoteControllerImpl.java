@@ -20,14 +20,17 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
 
     private HashMap<String, NodeInfo> nodesInfos;
 
+    private Johan johan;
+
     public ClientRemoteControllerImpl() throws RemoteException
     {
         super();
         nodesInfos = new HashMap<>();
+        johan = new Johan("172.20.10.2", 8080);
     }
 
     @Override
-    public boolean registerNode() throws RemoteException, ServerNotActiveException {
+    public boolean registerNode() throws Exception {
         String clientIp = getClientHost();
         if( nodesInfos.containsKey(clientIp) )
         {
@@ -40,13 +43,21 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
         info.setLastTick(System.currentTimeMillis());
         nodesInfos.put(clientIp,info);
 
+        johan.registerNode(info);
+
         System.out.println("Registered client " + clientIp + ".");
+
         return true;
     }
 
     @Override
-    public boolean unregisterNode() throws RemoteException, ServerNotActiveException {
+    public boolean unregisterNode() throws Exception {
         String clientIp = getClientHost();
+
+        NodeInfo node = nodesInfos.get(clientIp);
+
+        johan.unregisterNode(node);
+
         if( nodesInfos.remove(clientIp) == null ) {
             System.out.println("Attempted to unregister non-existing client " + clientIp + ".");
             return false;
@@ -57,7 +68,7 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
     }
 
     @Override
-    public boolean updateNode(DeviceInfo deviceInfo) throws RemoteException, ServerNotActiveException {
+    public boolean updateNode(DeviceInfo deviceInfo) throws Exception {
         String clientIp = getClientHost();
         NodeInfo node = nodesInfos.get(clientIp);
 
@@ -67,13 +78,16 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
         } else {
             node.setDeviceInfo(deviceInfo);
             node.setLastTick(System.currentTimeMillis());
+
+            johan.updateNode(node);
+
             System.out.println("Update: " + deviceInfo.getHostname());
         }
 
         return true;
     }
 
-    public void startTimeoutChecker() {
+    public void startTimeoutChecker() throws Exception {
         while(true) {
             System.out.println("Checking all nodes");
 
@@ -83,6 +97,7 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
                 long diff = System.currentTimeMillis() - entry.getValue().getLastTick();
                 if (diff > 20000) {
                     System.out.println("Timeout: removing node " + entry.getValue().getIp());
+                    johan.unregisterNode(entry.getValue());
                     it.remove();
                 }
             }
