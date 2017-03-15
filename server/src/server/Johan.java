@@ -12,24 +12,28 @@ import java.net.URL;
  */
 public class Johan
 {
-    String targetUrl;
-
     public Johan(String targetUrl)
     {
-        this.targetUrl = targetUrl;
+
     }
 
-    public void registerNode() throws IOException {
+    public void registerNode() throws IOException
+    {
+        String targetUrl = "";
+
         HttpURLConnection connection = null;
 
         URL url = new URL(targetUrl);
         connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type",
-                "application/x-www-form-urlencoded");
+                "application/json");
+
+        String body = "{ \"ip\": \"192.168.0.1\" }";
+        System.out.println("Body: " + body);
 
         connection.setRequestProperty("Content-Length",
-                "5");
+                Integer.toString(body.length() + 10));
         connection.setRequestProperty("Content-Language", "en-US");
 
         connection.setUseCaches(false);
