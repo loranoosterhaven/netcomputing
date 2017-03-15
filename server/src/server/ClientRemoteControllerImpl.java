@@ -2,11 +2,10 @@ package server;
 
 import shared.ClientRemoteController;
 import shared.DeviceInfo;
+import shared.Johan;
 
 import java.rmi.RemoteException;
-import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;

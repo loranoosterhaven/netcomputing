@@ -8,5 +8,22 @@ import java.io.Serializable;
 public class ThreadInfo implements Serializable
 {
     private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public long getUptime() {
+        return uptime;
+    }
+
+    public void setUptime(long uptime) {
+        this.uptime = uptime;
+    }
+
     private long uptime;
 }

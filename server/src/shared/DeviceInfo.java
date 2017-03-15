@@ -20,6 +20,14 @@ public class DeviceInfo implements Serializable
         systemInfo = new SystemInfo();
     }
 
+    public ArrayList<ProcessInfo> getProcessInfo() {
+        return processInfo;
+    }
+
+    public void setProcessInfo(ArrayList<ProcessInfo> processInfo) {
+        this.processInfo = processInfo;
+    }
+
     public String getHostname() {
         return hostname;
     }

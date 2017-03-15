@@ -1,7 +1,8 @@
-package server;
+package shared;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import server.NodeInfo;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -41,21 +42,15 @@ public class Johan
         sendHttpRequest(String.format("/nodes/%s", node.getIp()), "DELETE", "");
     }
 
-    public void updateNode(NodeInfo node) throws Exception {JsonObject json = new JsonObject();
-        json.addProperty("hostname", node.getDeviceInfo().getHostname());
-        json.addProperty("domainname", node.getDeviceInfo().getDomainName());
-        json.addProperty("username", node.getDeviceInfo().getUserName());
-        json.addProperty("cpu", node.getDeviceInfo().getSystemInfo().getCpu());
-
+    public void updateNode(NodeInfo node) throws Exception {
         Gson gson = new Gson();
+        // Add list of process info
+        String body = gson.toJson(node);
 
-        String body = gson.toJson(json);
-        System.out.println(body);
-
-        sendHttpRequest(String.format("/nodes/%s/deviceinfo", node.getIp()), "POST", gson.toJson(json));
+        sendHttpRequest(String.format("/nodes/%s/deviceinfo", node.getIp()), "POST", body);
     }
 
-    private void sendHttpRequest(String endpoint, String method, String body) throws Exception
+    public String sendHttpRequest(String endpoint, String method, String body) throws Exception
     {
         String targetUrl = apiEndpoint + endpoint;
 
@@ -93,5 +88,7 @@ public class Johan
         System.out.println(response);
 
         connection.disconnect();
+
+        return response.toString();
     }
 }
