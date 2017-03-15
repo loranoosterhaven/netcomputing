@@ -26,7 +26,7 @@ public class Main {
         remoteController = (ClientRemoteController) registry.lookup("ClientRemote");
 
         if( remoteController.registerNode() ) {
-            Thread.sleep(1000);
+            Thread.sleep(1002);
 
             DeviceInfo dummyDevice = new DeviceInfo();
             dummyDevice.setHostname("TEST-DEVICE");
