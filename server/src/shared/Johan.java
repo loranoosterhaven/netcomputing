@@ -2,6 +2,8 @@ package shared;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import server.NodeInfo;
 
 import java.io.*;
@@ -17,7 +19,7 @@ public class Johan
     public Johan(String ipAddress, int port)
     {
         apiEndpoint = String.format("http://%s:%d/api", ipAddress, port);
-        System.out.println("server api: " + apiEndpoint);
+        System.out.println("Dashboard API: " + apiEndpoint);
     }
 
     public void registerNode(NodeInfo node) throws Exception {
@@ -44,8 +46,16 @@ public class Johan
         // Add list of process info
         String body = gson.toJson(node);
 
+        System.out.println(body);
 
         sendHttpRequest(String.format("/nodes/%s/deviceinfo", node.getIp()), "POST", body);
+    }
+
+    public boolean checkShutdown(NodeInfo node) throws Exception {
+        String response = sendHttpRequest(String.format("/nodes/%s/shutdown", node.getIp()), "POST", "" );
+        JsonParser parser = new JsonParser();
+        JsonObject obj = parser.parse(response).getAsJsonObject();
+        return obj.get("shutdown").getAsBoolean();
     }
 
     public String sendHttpRequest(String endpoint, String method, String body) throws Exception

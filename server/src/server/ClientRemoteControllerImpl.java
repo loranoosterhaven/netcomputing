@@ -1,5 +1,8 @@
 package server;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import jdk.nashorn.internal.parser.JSONParser;
 import shared.ClientRemoteController;
 import shared.DeviceInfo;
 import shared.Johan;
@@ -7,6 +10,7 @@ import shared.Johan;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
@@ -19,6 +23,7 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
     private static final long serialVersionID = 1L;
 
     private HashMap<String, NodeInfo> nodesInfos;
+    private ArrayList<String> shutdownList;
 
     private Johan johan;
 
@@ -26,7 +31,8 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
     {
         super();
         nodesInfos = new HashMap<>();
-        johan = new Johan("172.20.10.2", 8080);
+        johan = new Johan("192.168.1.2", 8080);
+        shutdownList = new ArrayList<>();
     }
 
     @Override
@@ -87,6 +93,12 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
         return true;
     }
 
+    @Override
+    public boolean shouldShutdown() throws Exception {
+        String clientIp = getClientHost();
+        return shutdownList.contains(clientIp);
+    }
+
     public void syncNodes() throws Exception {
         while(true) {
             System.out.println("Checking all nodes");
@@ -96,12 +108,16 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
                 Map.Entry<String, NodeInfo> entry = it.next();
 
                 String ip = entry.getValue().getIp();
-                String response = johan.sendHttpRequest(String.format("/nodes/ip/%s/shutdown/", ip), "GET", "");
-                System.out.println(response);
+
+                if( johan.checkShutdown(entry.getValue())) {
+                    if (!shutdownList.contains(ip)) {
+                        shutdownList.add(ip);
+                    }
+                }
 
                 long diff = System.currentTimeMillis() - entry.getValue().getLastTick();
                 if (diff > 20000) {
-                    System.out.println("Timeout: removing node " + entry.getValue().getIp());
+                    System.out.println("Timeout: removing node " + ip);
                     johan.unregisterNode(entry.getValue());
                     it.remove();
                 }

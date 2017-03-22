@@ -10,4 +10,6 @@ public interface ClientRemoteController extends Remote
     boolean unregisterNode() throws Exception;
 
     boolean updateNode( DeviceInfo deviceInfo ) throws Exception;
+
+    boolean shouldShutdown() throws Exception;
 }

@@ -13,7 +13,6 @@ public class NodeInfo {
     public String getIp() {
         return ip;
     }
-
     public void setIp(String ip) {
         this.ip = ip;
     }
@@ -21,7 +20,6 @@ public class NodeInfo {
     public long getLastTick() {
         return lastTick;
     }
-
     public void setLastTick(long lastTick) {
         this.lastTick = lastTick;
     }
@@ -29,7 +27,6 @@ public class NodeInfo {
     public DeviceInfo getDeviceInfo() {
         return deviceInfo;
     }
-
     public void setDeviceInfo(DeviceInfo deviceInfo) {
         this.deviceInfo = deviceInfo;
     }

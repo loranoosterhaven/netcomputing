@@ -20,8 +20,8 @@ public class Main {
         for (int i = 0; i < count; i++) {
             ProcessInfo pinfo = new ProcessInfo();
             pinfo.setPid(i);
-            pinfo.setName("process");
-            pinfo.setPath("/");
+            pinfo.setName("process" + i);
+            pinfo.setPath("/bin/" + i + "/process" + i);
             pinfo.setUptime(355);
             info.getProcessInfo().add(pinfo);
 
@@ -36,8 +36,16 @@ public class Main {
 
     public static void main(String[] args) throws Exception
     {
+        /*if (args.length < 2) {
+            System.out.println("Usage: java client <ip> <portnumber>");
+            System.exit(1);
+        }*/
 
-        Registry registry = LocateRegistry.getRegistry("localhost", 20202);
+        // port and ip of the server
+        final String ip = "192.168.1.8";//args[0];
+        final int portNumber = 20202;//Integer.parseInt(args[1]);
+
+        Registry registry = LocateRegistry.getRegistry(ip, portNumber);
         remoteController = (ClientRemoteController) registry.lookup("ClientRemote");
 
         if( remoteController.registerNode() )
@@ -60,6 +68,11 @@ public class Main {
                 setProcessList(dummyDevice);
                 remoteController.updateNode(dummyDevice);
 
+                if( remoteController.shouldShutdown() )
+                {
+                    remoteController.unregisterNode();
+                    System.exit(0); //FAKE SHUTDOWN
+                }
                 Thread.sleep(1000);
             }
         }
