@@ -5,10 +5,7 @@ import com.google.gson.JsonObject;
 import server.NodeInfo;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.net.*;
 
 /**
  * Created by hein on 8-3-17.
@@ -46,6 +43,7 @@ public class Johan
         Gson gson = new Gson();
         // Add list of process info
         String body = gson.toJson(node);
+
 
         sendHttpRequest(String.format("/nodes/%s/deviceinfo", node.getIp()), "POST", body);
     }

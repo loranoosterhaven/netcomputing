@@ -4,6 +4,7 @@ import shared.ClientRemoteController;
 import shared.DeviceInfo;
 import shared.Johan;
 
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -86,19 +87,25 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
         return true;
     }
 
-    public void startTimeoutChecker() throws Exception {
+    public void syncNodes() throws Exception {
         while(true) {
             System.out.println("Checking all nodes");
 
             for (Iterator<Map.Entry<String, NodeInfo>> it = nodesInfos.entrySet().iterator(); it.hasNext();)
             {
                 Map.Entry<String, NodeInfo> entry = it.next();
+
+                String ip = entry.getValue().getIp();
+                String response = johan.sendHttpRequest(String.format("/nodes/ip/%s/shutdown/", ip), "GET", "");
+                System.out.println(response);
+
                 long diff = System.currentTimeMillis() - entry.getValue().getLastTick();
                 if (diff > 20000) {
                     System.out.println("Timeout: removing node " + entry.getValue().getIp());
                     johan.unregisterNode(entry.getValue());
                     it.remove();
                 }
+
             }
 
             try {

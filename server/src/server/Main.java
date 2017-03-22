@@ -2,8 +2,6 @@ package server;
 
 import shared.ClientRemoteController;
 
-import java.io.IOException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -45,7 +43,7 @@ class Main
 
             System.out.println("Server is running!");
 
-            cc.startTimeoutChecker();
+            cc.syncNodes();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -15,8 +15,6 @@ class DashboardController
     private String hostName;
     private Socket socket;
 
-
-
     DashboardController(String hostName, int portNumber) throws IOException
     {
         this.hostName = hostName;

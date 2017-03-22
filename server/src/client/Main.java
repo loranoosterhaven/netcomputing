@@ -47,8 +47,6 @@ public class Main {
             DeviceInfo dummyDevice = new DeviceInfo();
             dummyDevice.setHostname("TEST-DEVICE");
 
-            Johan johan = new Johan("172.20.10.2", 8080);
-
             while( true  ) {
                 Random rng = new Random();
 
@@ -61,10 +59,6 @@ public class Main {
 
                 setProcessList(dummyDevice);
                 remoteController.updateNode(dummyDevice);
-
-                String ip = InetAddress.getLocalHost().getHostAddress();
-                String response = johan.sendHttpRequest(String.format("/nodes/ip/%s/shutdown/", ip), "GET", "");
-                System.out.println(response);
 
                 Thread.sleep(1000);
             }
