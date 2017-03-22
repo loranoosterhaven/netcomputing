@@ -1,0 +1,915 @@
+Index: server/src/server/DashboardController.java
+===================================================================
+--- server/src/server/DashboardController.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/server/DashboardController.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,39 +0,0 @@
+-package server;
+-
+-import java.io.BufferedReader;
+-import java.io.IOException;
+-import java.io.InputStreamReader;
+-import java.io.PrintWriter;
+-import java.net.ServerSocket;
+-import java.net.Socket;
+-
+-class DashboardController
+-{
+-    private int portNumber;
+-
+-    // ip and socket used in webserver connection
+-    private String hostName;
+-    private Socket socket;
+-
+-    DashboardController(String hostName, int portNumber) throws IOException
+-    {
+-        this.hostName = hostName;
+-        this.portNumber = portNumber;
+-    }
+-
+-    void run() throws IOException {
+-        System.out.println("Connecting to webserver...");
+-        socket = new Socket (hostName, portNumber);
+-        System.out.println("connected!");
+-
+-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+-        out.write("Hello\n");
+-        out.flush();
+-
+-        BufferedReader input =
+-                new BufferedReader(new InputStreamReader(socket.getInputStream()));
+-        String answer = input.readLine();
+-        System.out.println(answer);
+-
+-    }
+-}
+Index: java-client/src/client/SystemInfo.java
+===================================================================
+--- java-client/src/client/SystemInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ java-client/src/client/SystemInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,11 +0,0 @@
+-package client;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class SystemInfo
+-{
+-    private long uptime;
+-    private long totalRAM;
+-    private long freeRAM;
+-}
+Index: java-client/src/client/Main.java
+===================================================================
+--- java-client/src/client/Main.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ java-client/src/client/Main.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,16 +0,0 @@
+-package client;
+-
+-import java.rmi.RMISecurityManager;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class Main
+-{
+-    private static R
+-
+-    public static void main(String[] args)
+-    {
+-        System.setSecurityManager(new RMISecurityManager());
+-    }
+-}
+\ No newline at end of file
+Index: java-client/.gitignore
+===================================================================
+--- java-client/.gitignore	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ java-client/.gitignore	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,38 +0,0 @@
+-
+-# Created by https://www.gitignore.io/api/intellij
+-
+-### Intellij ###
+-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
+-# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+-
+-.idea/
+-
+-## File-based project format:
+-*.iws
+-
+-## Plugin-specific files:
+-
+-# IntelliJ
+-/out/
+-
+-# mpeltonen/sbt-idea plugin
+-.idea_modules/
+-
+-# JIRA plugin
+-atlassian-ide-plugin.xml
+-
+-# Crashlytics plugin (for Android Studio and IntelliJ)
+-com_crashlytics_export_strings.xml
+-crashlytics.properties
+-crashlytics-build.properties
+-fabric.properties
+-
+-### Intellij Patch ###
+-# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+-
+-# *.iml
+-# modules.xml
+-# .idea/misc.xml
+-# *.ipr
+-
+-# End of https://www.gitignore.io/api/intellij
+\ No newline at end of file
+Index: java-client/src/client/DeviceInfo.java
+===================================================================
+--- java-client/src/client/DeviceInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ java-client/src/client/DeviceInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,11 +0,0 @@
+-package client;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class DeviceInfo
+-{
+-    private String hostname;
+-    private String domainName;
+-    private String userName;
+-}
+Index: server/src/shared/ClientRemoteController.java
+===================================================================
+--- server/src/shared/ClientRemoteController.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/shared/ClientRemoteController.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,15 +0,0 @@
+-package shared; /**
+- * Created by hein on 8-3-17.
+- */
+-import java.rmi.*;
+-import java.rmi.server.ServerNotActiveException;
+-
+-public interface ClientRemoteController extends Remote
+-{
+-    boolean registerNode() throws Exception;
+-    boolean unregisterNode() throws Exception;
+-
+-    boolean updateNode( DeviceInfo deviceInfo ) throws Exception;
+-
+-    boolean shouldShutdown() throws Exception;
+-}
+Index: server/src/shared/SystemInfo.java
+===================================================================
+--- server/src/shared/SystemInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/shared/SystemInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,39 +0,0 @@
+-package shared;
+-
+-import java.io.Serializable;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class SystemInfo implements Serializable
+-{
+-    private long uptime;
+-
+-    private long totalRAM;
+-    private long freeRAM;
+-    private double cpu;
+-
+-    public long getTotalRAM() {
+-        return totalRAM;
+-    }
+-
+-    public void setTotalRAM(long totalRAM) {
+-        this.totalRAM = totalRAM;
+-    }
+-
+-    public long getFreeRAM() {
+-        return freeRAM;
+-    }
+-
+-    public void setFreeRAM(long freeRAM) {
+-        this.freeRAM = freeRAM;
+-    }
+-
+-    public double getCpu() {
+-        return cpu;
+-    }
+-
+-    public void setCpu(double cpu) {
+-        this.cpu = cpu;
+-    }
+-}
+Index: java-client/java-client.iml
+===================================================================
+--- java-client/java-client.iml	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ java-client/java-client.iml	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,11 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<module type="JAVA_MODULE" version="4">
+-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+-    <exclude-output />
+-    <content url="file://$MODULE_DIR$">
+-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+-    </content>
+-    <orderEntry type="inheritedJdk" />
+-    <orderEntry type="sourceFolder" forTests="false" />
+-  </component>
+-</module>
+\ No newline at end of file
+Index: server/src/shared/DeviceInfo.java
+===================================================================
+--- server/src/shared/DeviceInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/shared/DeviceInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,56 +0,0 @@
+-package shared;
+-
+-import java.io.Serializable;
+-import java.util.ArrayList;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class DeviceInfo implements Serializable
+-{
+-    private String hostname;
+-    private String domainName;
+-    private String userName;
+-    private ArrayList<ProcessInfo> processInfo;
+-    private SystemInfo systemInfo;
+-
+-    public DeviceInfo()
+-    {
+-        processInfo = new ArrayList<>();
+-        systemInfo = new SystemInfo();
+-    }
+-
+-    public ArrayList<ProcessInfo> getProcessInfo() {
+-        return processInfo;
+-    }
+-
+-    public void setProcessInfo(ArrayList<ProcessInfo> processInfo) {
+-        this.processInfo = processInfo;
+-    }
+-
+-    public String getHostname() {
+-        return hostname;
+-    }
+-
+-    public void setHostname(String hostname) {
+-        this.hostname = hostname;
+-    }
+-
+-    public String getDomainName() {
+-        return domainName;
+-    }
+-
+-    public void setDomainName(String domainName) {
+-        this.domainName = domainName;
+-    }
+-
+-    public String getUserName() {
+-        return userName;
+-    }
+-
+-    public void setUserName(String userName) {
+-        this.userName = userName;
+-    }
+-
+-    public SystemInfo getSystemInfo() { return systemInfo; }
+-}
+Index: server/src/shared/ThreadInfo.java
+===================================================================
+--- server/src/shared/ThreadInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/shared/ThreadInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,29 +0,0 @@
+-package shared;
+-
+-import java.io.Serializable;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class ThreadInfo implements Serializable
+-{
+-    private int id;
+-
+-    public int getId() {
+-        return id;
+-    }
+-
+-    public void setId(int id) {
+-        this.id = id;
+-    }
+-
+-    public long getUptime() {
+-        return uptime;
+-    }
+-
+-    public void setUptime(long uptime) {
+-        this.uptime = uptime;
+-    }
+-
+-    private long uptime;
+-}
+Index: java-client/src/client/ThreadInfo.java
+===================================================================
+--- java-client/src/client/ThreadInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ java-client/src/client/ThreadInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,10 +0,0 @@
+-package client;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class ThreadInfo
+-{
+-    private int id;
+-    private long uptime;
+-}
+Index: server/.gitignore
+===================================================================
+--- server/.gitignore	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/.gitignore	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,38 +0,0 @@
+-
+-# Created by https://www.gitignore.io/api/intellij
+-
+-### Intellij ###
+-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
+-# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+-
+-.idea/
+-
+-## File-based project format:
+-*.iws
+-
+-## Plugin-specific files:
+-
+-# IntelliJ
+-/out/
+-
+-# mpeltonen/sbt-idea plugin
+-.idea_modules/
+-
+-# JIRA plugin
+-atlassian-ide-plugin.xml
+-
+-# Crashlytics plugin (for Android Studio and IntelliJ)
+-com_crashlytics_export_strings.xml
+-crashlytics.properties
+-crashlytics-build.properties
+-fabric.properties
+-
+-### Intellij Patch ###
+-# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+-
+-# *.iml
+-# modules.xml
+-# .idea/misc.xml
+-# *.ipr
+-
+-# End of https://www.gitignore.io/api/intellij
+\ No newline at end of file
+Index: server/src/shared/Johan.java
+===================================================================
+--- server/src/shared/Johan.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/shared/Johan.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,102 +0,0 @@
+-package shared;
+-
+-import com.google.gson.Gson;
+-import com.google.gson.JsonObject;
+-import com.google.gson.JsonParseException;
+-import com.google.gson.JsonParser;
+-import server.NodeInfo;
+-
+-import java.io.*;
+-import java.net.*;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class Johan
+-{
+-    private String apiEndpoint;
+-
+-    public Johan(String ipAddress, int port)
+-    {
+-        apiEndpoint = String.format("http://%s:%d/api", ipAddress, port);
+-        System.out.println("Dashboard API: " + apiEndpoint);
+-    }
+-
+-    public void registerNode(NodeInfo node) throws Exception {
+-        JsonObject json = new JsonObject();
+-        json.addProperty("ip", node.getIp());
+-
+-        Gson gson = new Gson();
+-
+-        String body = gson.toJson(json);
+-        System.out.println(body);
+-
+-        sendHttpRequest("/nodes", "POST", gson.toJson(json));
+-    }
+-
+-    public void unregisterNode(NodeInfo node) throws Exception
+-    {
+-        Gson gson = new Gson();
+-
+-        sendHttpRequest(String.format("/nodes/%s", node.getIp()), "DELETE", "");
+-    }
+-
+-    public void updateNode(NodeInfo node) throws Exception {
+-        Gson gson = new Gson();
+-        // Add list of process info
+-        String body = gson.toJson(node);
+-
+-        System.out.println(body);
+-
+-        sendHttpRequest(String.format("/nodes/%s/deviceinfo", node.getIp()), "POST", body);
+-    }
+-
+-    public boolean checkShutdown(NodeInfo node) throws Exception {
+-        String response = sendHttpRequest(String.format("/nodes/%s/shutdown", node.getIp()), "POST", "" );
+-        JsonParser parser = new JsonParser();
+-        JsonObject obj = parser.parse(response).getAsJsonObject();
+-        return obj.get("shutdown").getAsBoolean();
+-    }
+-
+-    public String sendHttpRequest(String endpoint, String method, String body) throws Exception
+-    {
+-        String targetUrl = apiEndpoint + endpoint;
+-
+-        HttpURLConnection connection = null;
+-
+-        URL url = new URL(targetUrl);
+-        connection = (HttpURLConnection) url.openConnection();
+-
+-        connection.setRequestMethod(method);
+-        connection.setRequestProperty("Content-Type",
+-                "application/json");
+-
+-        connection.setRequestProperty("Content-Length",
+-                Integer.toString(body.length() + 1));
+-        connection.setRequestProperty("Content-Language", "en-US");
+-
+-        connection.setUseCaches(false);
+-        connection.setDoOutput(true);
+-
+-        //Send request
+-        DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+-        wr.writeBytes(body);
+-        wr.close();
+-
+-        InputStream is = connection.getInputStream();
+-        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+-        StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+-        String line;
+-        while ((line = rd.readLine()) != null) {
+-            response.append(line);
+-            response.append('\r');
+-        }
+-        rd.close();
+-
+-        System.out.println(response);
+-
+-        connection.disconnect();
+-
+-        return response.toString();
+-    }
+-}
+Index: server/src/client/Main.java
+===================================================================
+--- server/src/client/Main.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/client/Main.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,82 +0,0 @@
+-package client;
+-
+-import shared.*;
+-
+-import java.net.InetAddress;
+-import java.rmi.registry.LocateRegistry;
+-import java.rmi.registry.Registry;
+-import java.util.Random;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class Main {
+-    private static ClientRemoteController remoteController;
+-
+-    static void setProcessList(DeviceInfo info)
+-    {
+-        int count = 3;
+-        info.getProcessInfo().clear();
+-        for (int i = 0; i < count; i++) {
+-            ProcessInfo pinfo = new ProcessInfo();
+-            pinfo.setPid(i);
+-            pinfo.setName("process" + i);
+-            pinfo.setPath("/bin/" + i + "/process" + i);
+-            pinfo.setUptime(355);
+-            info.getProcessInfo().add(pinfo);
+-
+-            for (int j = 0; j < 2; j++) {
+-                ThreadInfo thrInfo = new ThreadInfo();
+-                thrInfo.setUptime(200);
+-                thrInfo.setId(3);
+-                pinfo.getThreadInfo().add(thrInfo);
+-            }
+-        }
+-    }
+-
+-    public static void main(String[] args) throws Exception
+-    {
+-        /*if (args.length < 2) {
+-            System.out.println("Usage: java client <ip> <portnumber>");
+-            System.exit(1);
+-        }*/
+-
+-        // port and ip of the server
+-        final String ip = "192.168.1.8";//args[0];
+-        final int portNumber = 20202;//Integer.parseInt(args[1]);
+-
+-        Registry registry = LocateRegistry.getRegistry(ip, portNumber);
+-        remoteController = (ClientRemoteController) registry.lookup("ClientRemote");
+-
+-        if( remoteController.registerNode() )
+-        {
+-            Thread.sleep(1000);
+-
+-            DeviceInfo dummyDevice = new DeviceInfo();
+-            dummyDevice.setHostname("TEST-DEVICE");
+-
+-            while( true  ) {
+-                Random rng = new Random();
+-
+-                dummyDevice.getSystemInfo().setCpu(Math.random());
+-                dummyDevice.getSystemInfo().setFreeRAM(rng.nextLong());
+-                dummyDevice.getSystemInfo().setTotalRAM(4096);
+-                dummyDevice.setUserName("hein");
+-                dummyDevice.setHostname("host-name");
+-                dummyDevice.setDomainName("domain-name");
+-
+-                setProcessList(dummyDevice);
+-                remoteController.updateNode(dummyDevice);
+-
+-                if( remoteController.shouldShutdown() )
+-                {
+-                    remoteController.unregisterNode();
+-                    System.exit(0); //FAKE SHUTDOWN
+-                }
+-                Thread.sleep(1000);
+-            }
+-        }
+-    }
+-
+-
+-}
+Index: server/server.iml
+===================================================================
+--- server/server.iml	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/server.iml	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,12 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<module type="JAVA_MODULE" version="4">
+-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+-    <exclude-output />
+-    <content url="file://$MODULE_DIR$">
+-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+-    </content>
+-    <orderEntry type="inheritedJdk" />
+-    <orderEntry type="sourceFolder" forTests="false" />
+-    <orderEntry type="library" name="com.google.code.gson:gson:2.8.0" level="project" />
+-  </component>
+-</module>
+\ No newline at end of file
+Index: server/src/server/Main.java
+===================================================================
+--- server/src/server/Main.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/server/Main.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,40 +0,0 @@
+-package server;
+-
+-import shared.ClientRemoteController;
+-
+-import java.rmi.RemoteException;
+-import java.rmi.registry.LocateRegistry;
+-import java.rmi.registry.Registry;
+-import java.rmi.server.UnicastRemoteObject;
+-
+-class Main
+-{
+-    public static void main(String[] args) throws RemoteException, InterruptedException {
+-        /*if (args.length < 2) {
+-            System.out.println("Usage: java server <ip> <portnumber>");
+-            System.exit(1);
+-        }*/
+-
+-        // port and ip of the server
+-        final String ip = "192.168.1.8";//args[0];
+-        final int portNumber = 20202;//Integer.parseInt(args[1]);
+-
+-        System.setProperty("java.rmi.server.hostname", ip);
+-
+-        // Create client listener.
+-        try {
+-            ClientRemoteControllerImpl cc = new ClientRemoteControllerImpl();
+-            UnicastRemoteObject.unexportObject(cc, true);
+-            ClientRemoteController stub = (ClientRemoteController) UnicastRemoteObject.exportObject(cc,  0);
+-
+-            Registry registry = LocateRegistry.createRegistry(portNumber);
+-            registry.bind("ClientRemote", stub);
+-
+-            System.out.println("Server is running on " + ip + ":" + portNumber);
+-
+-            cc.syncNodes();
+-        } catch (Exception e) {
+-            e.printStackTrace();
+-        }
+-    }
+-}
+Index: server/src/shared/ProcessInfo.java
+===================================================================
+--- server/src/shared/ProcessInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/shared/ProcessInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,59 +0,0 @@
+-package shared;
+-
+-import java.io.Serializable;
+-import java.util.ArrayList;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-
+-public class ProcessInfo implements Serializable
+-{
+-    private int pid;
+-    private long uptime;
+-    private ArrayList<ThreadInfo> threadInfo = new ArrayList<>();
+-    private String name;
+-    private String path;
+-
+-    public int getPid() {
+-        return pid;
+-    }
+-
+-    public void setPid(int pid) {
+-        this.pid = pid;
+-    }
+-
+-    public long getUptime() {
+-        return uptime;
+-    }
+-
+-    public void setUptime(long uptime) {
+-        this.uptime = uptime;
+-    }
+-
+-    public ArrayList<ThreadInfo> getThreadInfo() {
+-        return threadInfo;
+-    }
+-
+-    public void setThreadInfo(ArrayList<ThreadInfo> threadInfo) {
+-        this.threadInfo = threadInfo;
+-    }
+-
+-    public String getName() {
+-        return name;
+-    }
+-
+-    public void setName(String name) {
+-        this.name = name;
+-    }
+-
+-    public String getPath() {
+-        return path;
+-    }
+-
+-    public void setPath(String path) {
+-        this.path = path;
+-    }
+-
+-
+-}
+Index: java-client/src/client/ProcessInfo.java
+===================================================================
+--- java-client/src/client/ProcessInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ java-client/src/client/ProcessInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,16 +0,0 @@
+-package client;
+-
+-import java.util.ArrayList;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-
+-public class ProcessInfo
+-{
+-    private int pid;
+-    private long uptime;
+-    private ArrayList<ThreadInfo> threadInfo;
+-    private String name;
+-    private String path;
+-}
+Index: server/src/server/ClientRemoteControllerImpl.java
+===================================================================
+--- server/src/server/ClientRemoteControllerImpl.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/server/ClientRemoteControllerImpl.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,134 +0,0 @@
+-package server;
+-
+-import com.google.gson.JsonObject;
+-import com.google.gson.JsonParser;
+-import jdk.nashorn.internal.parser.JSONParser;
+-import shared.ClientRemoteController;
+-import shared.DeviceInfo;
+-import shared.Johan;
+-
+-import java.net.InetAddress;
+-import java.rmi.RemoteException;
+-import java.rmi.server.UnicastRemoteObject;
+-import java.util.ArrayList;
+-import java.util.HashMap;
+-import java.util.Map;
+-import java.util.Iterator;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class ClientRemoteControllerImpl extends UnicastRemoteObject implements ClientRemoteController
+-{
+-    private static final long serialVersionID = 1L;
+-
+-    private HashMap<String, NodeInfo> nodesInfos;
+-    private ArrayList<String> shutdownList;
+-
+-    private Johan johan;
+-
+-    public ClientRemoteControllerImpl() throws RemoteException
+-    {
+-        super();
+-        nodesInfos = new HashMap<>();
+-        johan = new Johan("192.168.1.2", 8080);
+-        shutdownList = new ArrayList<>();
+-    }
+-
+-    @Override
+-    public boolean registerNode() throws Exception {
+-        String clientIp = getClientHost();
+-        if( nodesInfos.containsKey(clientIp) )
+-        {
+-            System.out.println("Attempted to register client " + clientIp + " twice.");
+-            return false;
+-        }
+-
+-        NodeInfo info = new NodeInfo();
+-        info.setIp(clientIp);
+-        info.setLastTick(System.currentTimeMillis());
+-        nodesInfos.put(clientIp,info);
+-
+-        johan.registerNode(info);
+-
+-        System.out.println("Registered client " + clientIp + ".");
+-
+-        return true;
+-    }
+-
+-    @Override
+-    public boolean unregisterNode() throws Exception {
+-        String clientIp = getClientHost();
+-
+-        NodeInfo node = nodesInfos.get(clientIp);
+-
+-        johan.unregisterNode(node);
+-
+-        if( nodesInfos.remove(clientIp) == null ) {
+-            System.out.println("Attempted to unregister non-existing client " + clientIp + ".");
+-            return false;
+-        }
+-
+-        System.out.println("Unregistered client " + clientIp + ".");
+-        return true;
+-    }
+-
+-    @Override
+-    public boolean updateNode(DeviceInfo deviceInfo) throws Exception {
+-        String clientIp = getClientHost();
+-        NodeInfo node = nodesInfos.get(clientIp);
+-
+-        if (node == null) {
+-            System.out.println("Attempted to update a non-existing client");
+-            return false;
+-        } else {
+-            node.setDeviceInfo(deviceInfo);
+-            node.setLastTick(System.currentTimeMillis());
+-
+-            johan.updateNode(node);
+-
+-            System.out.println("Update: " + deviceInfo.getHostname());
+-        }
+-
+-        return true;
+-    }
+-
+-    @Override
+-    public boolean shouldShutdown() throws Exception {
+-        String clientIp = getClientHost();
+-        return shutdownList.contains(clientIp);
+-    }
+-
+-    public void syncNodes() throws Exception {
+-        while(true) {
+-            System.out.println("Checking all nodes");
+-
+-            for (Iterator<Map.Entry<String, NodeInfo>> it = nodesInfos.entrySet().iterator(); it.hasNext();)
+-            {
+-                Map.Entry<String, NodeInfo> entry = it.next();
+-
+-                String ip = entry.getValue().getIp();
+-
+-                if( johan.checkShutdown(entry.getValue())) {
+-                    if (!shutdownList.contains(ip)) {
+-                        shutdownList.add(ip);
+-                    }
+-                }
+-
+-                long diff = System.currentTimeMillis() - entry.getValue().getLastTick();
+-                if (diff > 20000) {
+-                    System.out.println("Timeout: removing node " + ip);
+-                    johan.unregisterNode(entry.getValue());
+-                    it.remove();
+-                }
+-
+-            }
+-
+-            try {
+-                Thread.sleep(10000);
+-            } catch (InterruptedException e) {
+-                e.printStackTrace();
+-            }
+-        }
+-    }
+-}
+Index: server/src/server/NodeInfo.java
+===================================================================
+--- server/src/server/NodeInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
++++ server/src/server/NodeInfo.java	(revision 163812d33656782c3e9929ba8fd19a06e7f9aa56)
+@@ -1,52 +0,0 @@
+-package server;
+-
+-import shared.DeviceInfo;
+-
+-/**
+- * Created by hein on 8-3-17.
+- */
+-public class NodeInfo {
+-    private String ip;
+-    private long lastTick;
+-    private DeviceInfo deviceInfo;
+-
+-    public String getIp() {
+-        return ip;
+-    }
+-    public void setIp(String ip) {
+-        this.ip = ip;
+-    }
+-
+-    public long getLastTick() {
+-        return lastTick;
+-    }
+-    public void setLastTick(long lastTick) {
+-        this.lastTick = lastTick;
+-    }
+-
+-    public DeviceInfo getDeviceInfo() {
+-        return deviceInfo;
+-    }
+-    public void setDeviceInfo(DeviceInfo deviceInfo) {
+-        this.deviceInfo = deviceInfo;
+-    }
+-
+-    @Override
+-    public boolean equals(Object obj)
+-    {
+-        if( this == obj )
+-            return true;
+-
+-        if( obj == null || (getClass() != obj.getClass()))
+-            return false;
+-
+-        NodeInfo other = ( NodeInfo )obj;
+-        return ip.equals(other.ip);
+-    }
+-
+-    @Override
+-    public int hashCode()
+-    {
+-        return ip.hashCode();
+-    }
+-}
