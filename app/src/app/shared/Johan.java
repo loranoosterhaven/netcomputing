@@ -29,7 +29,6 @@ public class Johan
         Gson gson = new Gson();
 
         String body = gson.toJson(json);
-        System.out.println(body);
 
         sendHttpRequest("/nodes", "POST", gson.toJson(json));
     }
@@ -45,8 +44,6 @@ public class Johan
         Gson gson = new Gson();
         // Add list of process info
         String body = gson.toJson(node);
-
-        System.out.println(body);
 
         sendHttpRequest(String.format("/nodes/%s/deviceinfo", node.getIp()), "POST", body);
     }

@@ -27,11 +27,11 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
 
     private Johan johan;
 
-    public ClientRemoteControllerImpl() throws RemoteException
+    public ClientRemoteControllerImpl( String dashboardIp, int dashboardPort ) throws RemoteException
     {
         super();
         nodesInfos = new HashMap<>();
-        johan = new Johan("192.168.1.2", 8080);
+        johan = new Johan(dashboardIp, dashboardPort);
         shutdownList = new ArrayList<>();
     }
 
@@ -125,7 +125,7 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
             }
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

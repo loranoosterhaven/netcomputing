@@ -59,7 +59,7 @@ public class Main {
                 Random rng = new Random();
 
                 dummyDevice.getSystemInfo().setCpu(Math.random());
-                dummyDevice.getSystemInfo().setFreeRAM(rng.nextLong());
+                dummyDevice.getSystemInfo().setFreeRAM(rng.nextLong() % 4096);
                 dummyDevice.getSystemInfo().setTotalRAM(4096);
                 dummyDevice.setUserName("hein");
                 dummyDevice.setHostname("host-name");
