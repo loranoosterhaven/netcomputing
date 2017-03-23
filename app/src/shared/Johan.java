@@ -1,10 +1,10 @@
-package app.shared;
+package shared;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import app.server.NodeInfo;
+import server.NodeInfo;
 
 import java.io.*;
 import java.net.*;

@@ -1,11 +1,11 @@
-package app.server;
+package server;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import jdk.nashorn.internal.parser.JSONParser;
-import app.shared.ClientRemoteController;
-import app.shared.DeviceInfo;
-import app.shared.Johan;
+import shared.ClientRemoteController;
+import shared.DeviceInfo;
+import shared.Johan;
 
 import java.net.InetAddress;
 import java.rmi.RemoteException;

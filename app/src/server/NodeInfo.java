@@ -1,6 +1,6 @@
-package app.server;
+package server;
 
-import app.shared.DeviceInfo;
+import shared.DeviceInfo;
 
 /**
  * Created by hein on 8-3-17.
