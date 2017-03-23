@@ -1,4 +1,4 @@
-package shared; /**
+package app.shared; /**
  * Created by hein on 8-3-17.
  */
 import java.rmi.*;

@@ -1,6 +1,6 @@
-package client;
+package app.client;
 
-import shared.*;
+import app.shared.*;
 
 import java.net.InetAddress;
 import java.rmi.registry.LocateRegistry;

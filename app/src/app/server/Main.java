@@ -1,6 +1,6 @@
-package server;
+package app.server;
 
-import shared.ClientRemoteController;
+import app.shared.ClientRemoteController;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

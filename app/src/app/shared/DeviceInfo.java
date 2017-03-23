@@ -1,4 +1,4 @@
-package shared;
+package app.shared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
