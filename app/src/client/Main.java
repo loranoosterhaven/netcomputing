@@ -10,8 +10,8 @@ import java.util.Random;
 public class Main {
     private static ClientRemoteController remoteController;
     /**
-     * Set the a test process list on a device devInfo
-     * @param devInfo
+     * Set the a test process list on a device
+     * @param devInfo device info to set
      */
     static void setDummyProcessList(DeviceInfo devInfo)
     {
