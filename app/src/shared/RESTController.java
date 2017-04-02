@@ -22,6 +22,11 @@ public class RESTController
         System.out.println("Dashboard API: " + apiEndpoint);
     }
 
+    /**
+     * Register a node to the webserver
+     * @param node the node to be registered
+     * @throws Exception
+     */
     public void registerNode(NodeInfo node) throws Exception {
         JsonObject json = new JsonObject();
         json.addProperty("ip", node.getIp());
@@ -33,6 +38,11 @@ public class RESTController
         sendHttpRequest("/nodes", "POST", gson.toJson(json));
     }
 
+    /**
+     * Unregister a node from the webserver
+     * @param node the node to be unregistered
+     * @throws Exception
+     */
     public void unregisterNode(NodeInfo node) throws Exception
     {
         Gson gson = new Gson();
@@ -40,6 +50,11 @@ public class RESTController
         sendHttpRequest(String.format("/nodes/%s", node.getIp()), "DELETE", "");
     }
 
+    /**
+     * Update a node
+     * @param node the node to be updated
+     * @throws Exception
+     */
     public void updateNode(NodeInfo node) throws Exception {
         Gson gson = new Gson();
         // Add list of process info
@@ -48,6 +63,12 @@ public class RESTController
         sendHttpRequest(String.format("/nodes/%s/deviceinfo", node.getIp()), "POST", body);
     }
 
+    /**
+     * check if a node is to be shutdown
+     * @param node node to be checked
+     * @return whether node is to be shutdown
+     * @throws Exception
+     */
     public boolean checkShutdown(NodeInfo node) throws Exception {
         String response = sendHttpRequest(String.format("/nodes/%s/shutdown", node.getIp()), "POST", "" );
         JsonParser parser = new JsonParser();
@@ -55,6 +76,15 @@ public class RESTController
         return obj.get("shutdown").getAsBoolean();
     }
 
+
+    /**
+     * Send a HTTP request to the websrever
+     * @param endpoint the endpoint where we will send
+     * @param method method to be used
+     * @param body body of the request
+     * @return the HTTP response
+     * @throws Exception
+     */
     public String sendHttpRequest(String endpoint, String method, String body) throws Exception
     {
         String targetUrl = apiEndpoint + endpoint;
