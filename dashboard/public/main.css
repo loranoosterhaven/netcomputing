@@ -1,0 +1,35 @@
+/* CSS declarations go here */
+#title {
+    margin-bottom:41px;
+}
+
+h1 {
+    font-weight: 100 !important;
+    font-family: 'Open Sans', sans-serif
+}
+
+h3 {
+    font-weight: 100 !important;
+    font-family: 'Open Sans', sans-serif;
+    padding-bottom:0;
+    margin-bottom:0;
+}
+
+hr {
+    margin-top: 4px;
+    margin-bottom: 20px;
+    border-color: #e4e6e8;
+}
+
+small {
+    margin-top:0;
+    padding-top:0;
+    padding-left: 4px;
+    font-size:0.8em;
+}
+
+
+.graph-container {
+    padding-bottom: 24px;
+}
+

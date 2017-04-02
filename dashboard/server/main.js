@@ -1,29 +1,22 @@
+/**
+ * Main file for the server.
+ *
+ *
+ */
+
 import { Meteor } from 'meteor/meteor';
-import { Nodes} from '../imports/api/nodes.js';
-let net = require('net');
+const api = require('./api/api');
+const bodyParser = require('body-parser');
 
-let port = 1337;
-
+// Boot API server
 Meteor.startup(() => {
-    let server = net.createServer(Meteor.bindEnvironment(function(socket) {
-        console.log('CONNECTED (' + socket.localPort + '): ' + socket.remoteAddress + ':' + socket.remotePort);
+    let express = require('express');
+    let app = express();
 
-        socket.on('data', Meteor.bindEnvironment(function (data) {
-            Nodes.insert({ip: '192.168.2.' + (Math.random() % 255)});
+    app.use(bodyParser.json());
+    app.use('/api', api);
 
-            // close connection
-            socket.end();
-        }));
-
-        socket.on('error', function (error) {
-            console.log('******* ERROR ' + error + ' *******');
-
-            // close connection
-            socket.end();
-        });
-    }));
-
-    server.listen(port, function() {
-        console.log('Listening on ' + port);
+    app.listen('8080', function() {
+        console.log('API listening on port 8080');
     });
 });

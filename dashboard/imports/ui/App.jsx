@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+    import React, { Component } from 'react';
 import Header from './Header';
 import NodeInfoSection from './NodeInfoSection';
-import Node from '../Node';
 import { Nodes } from '../api/nodes';
 import { createContainer } from 'meteor/react-meteor-data';
 
@@ -10,29 +8,64 @@ import { createContainer } from 'meteor/react-meteor-data';
 class App extends Component {
     renderNodeInfo() {
         return this.props.nodes.map((node) => (
-            <div className="container">
                 <NodeInfoSection node={node}/>
-            </div>
         ));
     }
 
+    renderTitle() {
+        if(this.props.count === 0) {
+            return <h1>No connected nodes</h1>;
+        }
+        else if(this.props.count === 1) {
+            return <h1>One connected node</h1>;
+        }
+        else {
+            return <h1>{this.props.count} connected nodes</h1>
+        }
+    }
+
+    updateMyState() {
+        this.setState({trigger: Math.random() });
+
+        console.log('Rendering...');
+    }
+
     render() {
-        return (
+
+        let output = (
             <div id="my-app">
                 <Header name="Dashboard"/>
 
                 <div className="container" id="app-content">
-                    <h2>Connected Nodes: {this.props.count}</h2>
-                    {this.renderNodeInfo()}
+                    <div className="row">
+                        <div className="col-md-10">
+
+                            <div id="title">
+                                {this.renderTitle()}
+                                <hr/>
+                            </div>
+                            {this.renderNodeInfo()}
+                        </div>
+                    </div>
                 </div>
             </div>
         );
+
+        setTimeout(this.updateMyState.bind(this), 100);
+
+        return output;
     }
 }
 
+
 export default createContainer(() => {
+    let nodes = Nodes.find({});
+    let count = nodes.count();
+
     return {
-        nodes: Nodes.find({}).fetch(),
-        count: Nodes.count
+        nodes,
+        count
     };
 }, App);
+
+
