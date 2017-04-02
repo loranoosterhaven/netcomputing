@@ -2,7 +2,6 @@ package server;
 
 import shared.ClientRemoteController;
 import shared.DeviceInfo;
-import shared.RESTController;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
