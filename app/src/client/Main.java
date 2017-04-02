@@ -2,7 +2,6 @@ package client;
 
 import shared.*;
 
-import java.net.InetAddress;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Random;
@@ -12,18 +11,21 @@ import java.util.Random;
  */
 public class Main {
     private static ClientRemoteController remoteController;
-
-    static void setProcessList(DeviceInfo info)
+    /**
+     * Set the a test process list on a device devInfo
+     * @param devInfo
+     */
+    static void setDummyProcessList(DeviceInfo devInfo)
     {
         int count = 3;
-        info.getProcessInfo().clear();
+        devInfo.getProcessInfo().clear();
         for (int i = 0; i < count; i++) {
             ProcessInfo pinfo = new ProcessInfo();
             pinfo.setPid(i);
             pinfo.setName("process" + i);
             pinfo.setPath("/bin/" + i + "/process" + i);
             pinfo.setUptime(355);
-            info.getProcessInfo().add(pinfo);
+            devInfo.getProcessInfo().add(pinfo);
 
             for (int j = 0; j < 2; j++) {
                 ThreadInfo thrInfo = new ThreadInfo();
@@ -36,15 +38,19 @@ public class Main {
 
     public static void main(String[] args) throws Exception
     {
-        /*if (args.length < 2) {
-            System.out.println("Usage: java client <ip> <portnumber>");
+        /*
+        Check command line arguments
+         */
+        if (args.length < 2) {
+            System.out.println("Usage: client <ip> <portnumber>");
             System.exit(1);
-        }*/
+        }
 
         // port and ip of the server
-        final String ip = "192.168.1.8";//args[0];
-        final int portNumber = 20202;//Integer.parseInt(args[1]);
+        final String ip = args[0];
+        final int portNumber = Integer.parseInt(args[1]);
 
+        // Get the remote registry
         Registry registry = LocateRegistry.getRegistry(ip, portNumber);
         remoteController = (ClientRemoteController) registry.lookup("ClientRemote");
 
@@ -52,12 +58,14 @@ public class Main {
         {
             Thread.sleep(1000);
 
+            // Construct a test device info - we don't use actual data
             DeviceInfo dummyDevice = new DeviceInfo();
             dummyDevice.setHostname("TEST-DEVICE");
 
-            while( true  ) {
+            while (true) {
                 Random rng = new Random();
 
+                // Set test data
                 dummyDevice.getSystemInfo().setCpu(Math.random());
                 dummyDevice.getSystemInfo().setFreeRAM(rng.nextLong() % 4096);
                 dummyDevice.getSystemInfo().setTotalRAM(4096);
@@ -65,9 +73,12 @@ public class Main {
                 dummyDevice.setHostname("host-name");
                 dummyDevice.setDomainName("domain-name");
 
-                setProcessList(dummyDevice);
+                setDummyProcessList(dummyDevice);
+
+                // Update the node on the remote
                 remoteController.updateNode(dummyDevice);
 
+                // Check if we should shutdown
                 if( remoteController.shouldShutdown() )
                 {
                     remoteController.unregisterNode();

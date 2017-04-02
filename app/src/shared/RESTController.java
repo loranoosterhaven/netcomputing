@@ -12,11 +12,11 @@ import java.net.*;
 /**
  * Created by hein on 8-3-17.
  */
-public class Johan
+public class RESTController
 {
     private String apiEndpoint;
 
-    public Johan(String ipAddress, int port)
+    public RESTController(String ipAddress, int port)
     {
         apiEndpoint = String.format("http://%s:%d/api", ipAddress, port);
         System.out.println("Dashboard API: " + apiEndpoint);

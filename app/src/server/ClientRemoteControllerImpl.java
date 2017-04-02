@@ -1,13 +1,9 @@
 package server;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import jdk.nashorn.internal.parser.JSONParser;
 import shared.ClientRemoteController;
 import shared.DeviceInfo;
-import shared.Johan;
+import shared.RESTController;
 
-import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -24,17 +20,21 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
 
     private HashMap<String, NodeInfo> nodesInfos;
     private ArrayList<String> shutdownList;
-
-    private Johan johan;
+    private RESTController restController;
 
     public ClientRemoteControllerImpl( String dashboardIp, int dashboardPort ) throws RemoteException
     {
         super();
         nodesInfos = new HashMap<>();
-        johan = new Johan(dashboardIp, dashboardPort);
+        restController = new RESTController(dashboardIp, dashboardPort);
         shutdownList = new ArrayList<>();
     }
 
+    /**
+     * Register a new node
+     * @return true if register succesfull, else false
+     * @throws Exception
+     */
     @Override
     public boolean registerNode() throws Exception {
         String clientIp = getClientHost();
@@ -49,20 +49,26 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
         info.setLastTick(System.currentTimeMillis());
         nodesInfos.put(clientIp,info);
 
-        johan.registerNode(info);
+        restController.registerNode(info);
 
         System.out.println("Registered client " + clientIp + ".");
 
         return true;
     }
 
+
+    /**
+     * Unregister a node, given that it is contained in the list
+     * @return true if unregister succesfull, else false
+     * @throws Exception
+     */
     @Override
     public boolean unregisterNode() throws Exception {
         String clientIp = getClientHost();
 
         NodeInfo node = nodesInfos.get(clientIp);
 
-        johan.unregisterNode(node);
+        restController.unregisterNode(node);
 
         if( nodesInfos.remove(clientIp) == null ) {
             System.out.println("Attempted to unregister non-existing client " + clientIp + ".");
@@ -73,6 +79,12 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
         return true;
     }
 
+    /**
+     * Update a client, given that it is contained in the node list
+     * @param deviceInfo the new device info
+     * @return true if update succesfull, false else
+     * @throws Exception
+     */
     @Override
     public boolean updateNode(DeviceInfo deviceInfo) throws Exception {
         String clientIp = getClientHost();
@@ -85,7 +97,7 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
             node.setDeviceInfo(deviceInfo);
             node.setLastTick(System.currentTimeMillis());
 
-            johan.updateNode(node);
+            restController.updateNode(node);
 
             System.out.println("Update: " + deviceInfo.getHostname());
         }
@@ -93,12 +105,21 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
         return true;
     }
 
+    /**
+     * Checks if a client should shutdown
+     * @return true if client should shutdown, false else
+     * @throws Exception
+     */
     @Override
     public boolean shouldShutdown() throws Exception {
         String clientIp = getClientHost();
         return shutdownList.contains(clientIp);
     }
 
+    /**
+     * Handle client timeouts and shutdown
+     * @throws Exception
+     */
     public void syncNodes() throws Exception {
         while(true) {
             System.out.println("Checking all nodes");
@@ -109,7 +130,7 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
 
                 String ip = entry.getValue().getIp();
 
-                if( johan.checkShutdown(entry.getValue())) {
+                if( restController.checkShutdown(entry.getValue())) {
                     if (!shutdownList.contains(ip)) {
                         shutdownList.add(ip);
                     }
@@ -118,7 +139,7 @@ public class ClientRemoteControllerImpl extends UnicastRemoteObject implements C
                 long diff = System.currentTimeMillis() - entry.getValue().getLastTick();
                 if (diff > 20000) {
                     System.out.println("Timeout: removing node " + ip);
-                    johan.unregisterNode(entry.getValue());
+                    restController.unregisterNode(entry.getValue());
                     it.remove();
                 }
 

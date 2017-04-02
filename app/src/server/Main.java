@@ -10,17 +10,17 @@ import java.rmi.server.UnicastRemoteObject;
 class Main
 {
     public static void main(String[] args) throws RemoteException, InterruptedException {
-        /*if (args.length < 4) {
-            System.out.println("Usage: java server <ip> <portnumber> <dashboardip> <dashboardport>");
+        if (args.length < 4) {
+            System.out.println("Usage: server <ip> <portnumber> <dashboardip> <dashboardport>");
             System.exit(1);
-        }*/
+        }
 
         // port and ip of the server
-        final String ip = "192.168.1.8";//args[0];
-        final int portNumber = 20202;//Integer.parseInt(args[1]);
+        final String ip = args[0];
+        final int portNumber = Integer.parseInt(args[1]);
 
-        final String dashboardIp = "192.168.1.2";//args[2];
-        final int dashboardPort = 8080;//Integer.parseInt(args[3]);
+        final String dashboardIp = args[2];
+        final int dashboardPort = Integer.parseInt(args[3]);
 
         System.setProperty("java.rmi.server.hostname", ip);
 
