@@ -1,6 +1,5 @@
-package shared; /**
- * Created by hein on 8-3-17.
- */
+package shared;
+
 import java.rmi.*;
 import java.rmi.server.ServerNotActiveException;
 
@@ -8,14 +7,14 @@ public interface ClientRemoteController extends Remote
 {
     /**
      * Register a new node
-     * @return true if register succesfull, else false
+     * @return true if register successful, else false
      * @throws Exception
      */
     boolean registerNode() throws Exception;
 
     /**
      * Unregister a node, given that it is contained in the list
-     * @return true if unregister succesfull, else false
+     * @return true if unregister successful, else false
      * @throws Exception
      */
     boolean unregisterNode() throws Exception;
@@ -23,7 +22,7 @@ public interface ClientRemoteController extends Remote
     /**
      * Update a client, given that it is contained in the node list
      * @param deviceInfo the new device info
-     * @return true if update succesfull, false else
+     * @return true if update successful, false else
      * @throws Exception
      */
     boolean updateNode( DeviceInfo deviceInfo ) throws Exception;

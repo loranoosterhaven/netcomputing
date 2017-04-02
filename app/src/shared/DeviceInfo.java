@@ -3,9 +3,7 @@ package shared;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by hein on 8-3-17.
- */
+
 public class DeviceInfo implements Serializable
 {
     private String hostname;

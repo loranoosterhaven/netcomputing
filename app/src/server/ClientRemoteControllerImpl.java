@@ -11,9 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 
-/**
- * Created by hein on 8-3-17.
- */
+
 public class ClientRemoteControllerImpl extends UnicastRemoteObject implements ClientRemoteController
 {
     private static final long serialVersionID = 1L;

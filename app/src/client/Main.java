@@ -6,9 +6,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Random;
 
-/**
- * Created by hein on 8-3-17.
- */
+
 public class Main {
     private static ClientRemoteController remoteController;
     /**

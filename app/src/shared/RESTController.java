@@ -9,9 +9,6 @@ import server.NodeInfo;
 import java.io.*;
 import java.net.*;
 
-/**
- * Created by hein on 8-3-17.
- */
 public class RESTController
 {
     private String apiEndpoint;

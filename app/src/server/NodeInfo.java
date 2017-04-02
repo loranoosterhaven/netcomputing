@@ -2,9 +2,6 @@ package server;
 
 import shared.DeviceInfo;
 
-/**
- * Created by hein on 8-3-17.
- */
 public class NodeInfo {
     private String ip;
     private long lastTick;
