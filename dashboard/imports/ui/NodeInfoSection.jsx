@@ -68,7 +68,7 @@ export default class NodeInfoSection extends Component
     {
         return (
             <div className="graph-container">
-                <Graph ip={this.props.node.ip} type_of_data={this.state.displayedSection} data={this.props.node[this.state.displayedSection]}/>
+                <Graph ip={this.props.node.ip} type_of_data={this.state.displayedSection} data={this.props.node[this.state.displayedSection].slice(-25)}/>
             </div>
         );
     }

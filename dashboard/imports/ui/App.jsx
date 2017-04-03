@@ -59,7 +59,9 @@ class App extends Component {
 
 
 export default createContainer(() => {
-    let nodes = Nodes.find({});
+    let nodes = Nodes.find({}, {
+        sort: {_id: -1},
+    });
     let count = nodes.count();
 
     return {
